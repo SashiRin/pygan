@@ -7,11 +7,12 @@ import torchvision.datasets as dset
 import torchvision.transforms as transforms
 import torch
 
-import os
-import sys
-lib_path = os.path.abspath(os.path.join(__file__, '..', '..', '..', 'lib'))
-sys.path.append(lib_path)
-from .models.models import model
+if __name__ == '__main__':
+	from models.models import model
+else:
+	from .models.models import model
+
+print(model)
 
 
 class DataFrameDataset(Dataset):
@@ -26,7 +27,6 @@ class DataFrameDataset(Dataset):
         self.dfmin = self.df.min()
         self.dfmean = self.df.mean()
         self.dfstd = self.df.std()
-        # print(self.categories)
 
     def __len__(self):
         return len(self.df)
@@ -68,7 +68,6 @@ class DataFrameDataset(Dataset):
         self.df = (self.df - self.dfmin) / (self.dfmax - self.dfmin) * 2 - 1
 
     def dataDestandarize(self, df=None):
-        print(self.dfmean)
         if df is None:
             self.df = self.df * self.dfstd + self.dfmean
         else:
@@ -105,7 +104,7 @@ class DataFrameDataset(Dataset):
 
 
 
-def main():
+def main(opt):
     # testing
     if opt.image:
         data_loader = torch.utils.data.DataLoader(
@@ -118,7 +117,7 @@ def main():
             batch_size=opt.batch_size, shuffle=False)
     # testing
     else:
-        data_loader = load_data()
+        data_loader = load_data(opt)
 
     # testing
     if opt.image:
@@ -140,15 +139,13 @@ def main():
         image=opt.image)
     GAN.train(opt.epoch_num)
     gen_data = GAN.generate(opt.gen_num)
-    # gen_data = data_loader.dataset.dataDenorm(gen_data)
     gen_data = data_loader.dataset.dataDestandarize(gen_data)
-    # print(gen_data)
     data_loader.dataset.dataRound(gen_data)
     GAN.save('{}/generator_weight'.format(opt.path), '{}/discriminator_weight'.format(opt.path))
     gen_data.to_csv('{}/gen_data.csv'.format(opt.path), index=False)
     return GAN, gen_data
 
-def load_data():
+def load_data(opt):
     if opt.data_type == 'FRAME':
         dataset = DataFrameDataset(opt.data_root, opt.y_label)
     elif opt.data_type == 'SET':
@@ -185,4 +182,4 @@ if __name__ == '__main__':
     parser.add_argument('--path', type=str, default='./result')
     opt = parser.parse_args()
 
-    main()
+    main(opt)

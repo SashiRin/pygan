@@ -11,10 +11,7 @@ from .gan import GAN
 from .generators import ConditionalBNGenerator, ConditionalGenerator
 from .discriminators import ConditionalBNDiscriminator, ConditionalDiscriminator
 
-# import matplotlib.pyplot as plt
-
-from tqdm import tqdm
-from tqdm import trange
+from tqdm import tqdm, trange
 
 
 class CGAN(GAN):
@@ -48,8 +45,8 @@ class CGAN(GAN):
         self.D.weight_init(mean=0, std=0.02)
         # self.gen_plot(0)
         # print('...')
-        for epoch in trange(epoch_num, desc='Epoch', leave=True, position=1):
-            pbar2 = tqdm(total=len(self.train_loader), leave=False, position=2)
+        for epoch in trange(epoch_num, desc='Epoch'):
+            pbar2 = tqdm(total=len(self.train_loader))
 
             generator_losses = []
             discriminator_losses = []
@@ -121,7 +118,7 @@ class CGAN(GAN):
                 torch.mean(torch.FloatTensor(discriminator_losses)),
                 torch.mean(torch.FloatTensor(generator_losses))))
             # self.gen_plot(epoch + 1)
-            self.gen_df(epoch + 1)
+            # self.gen_df(epoch + 1)
 
     # testing
     def gen_plot(self, epoch_num):
