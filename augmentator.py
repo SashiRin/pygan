@@ -6,7 +6,12 @@ import numpy as np
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
 import torch
-from models.models import model
+
+import os
+import sys
+lib_path = os.path.abspath(os.path.join(__file__, '..', '..', '..', 'lib'))
+sys.path.append(lib_path)
+from .models.models import model
 
 
 class DataFrameDataset(Dataset):

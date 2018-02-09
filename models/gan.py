@@ -6,8 +6,8 @@ from torch.autograd import Variable
 
 import pandas as pd
 
-from models.generators import BaseGenerator
-from models.discriminators import BaseDiscriminator
+from .generators import BaseGenerator
+from .discriminators import BaseDiscriminator
 
 from tqdm import tqdm
 

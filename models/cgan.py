@@ -7,11 +7,11 @@ from torch.autograd import Variable
 
 import pandas as pd
 
-from models.gan import GAN
-from models.generators import ConditionalBNGenerator, ConditionalGenerator
-from models.discriminators import ConditionalBNDiscriminator, ConditionalDiscriminator
+from .gan import GAN
+from .generators import ConditionalBNGenerator, ConditionalGenerator
+from .discriminators import ConditionalBNDiscriminator, ConditionalDiscriminator
 
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 from tqdm import tqdm
 from tqdm import trange

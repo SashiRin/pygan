@@ -1,4 +1,4 @@
-from models.gan import GAN
+from .gan import GAN
 from .cgan import CGAN
 # from .wgan import WGAN
 # from .wcgan import WCGAN
