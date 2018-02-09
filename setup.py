@@ -27,7 +27,7 @@ setup(
     author_email        =   'gompu123@gmail.com',
     url                 =   'https://github.com/gompu123/pygan',
     install_requires    =   install_requires,
-    packages            =   [ 'pygan' ],
+    packages            =   find_packages(exclude = ['docs', 'example']),
     keywords            =   [ 'Machine Learning', 'Deep Learning', 'AI', 'GAN', 'Generative Adversarial Networks', 'Data Augmentation'],
     setup_requires      =   setup_requires,
     dependency_links    =   dependency_links,
