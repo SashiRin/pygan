@@ -101,7 +101,8 @@ ENV/
 .mypy_cache/
 
 
-
+# Addition
 .DS_Store
 .ipynb_checkpoint/
+.idea/
 __pycache__
