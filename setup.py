@@ -4,11 +4,16 @@ setup_requires = [
     ]
 
 install_requires = [
-    'numpy==1.14.0',
-    'pandas==0.22.0',
-    'torch==0.3.0.post4',
-    'torchvision==0.2.0',
-    'tqdm==4.19.4'
+    # 'numpy==1.14.0',
+    # 'pandas==0.22.0',
+    # 'torch==0.3.0.post4',
+    # 'torchvision==0.2.0',
+    # 'tqdm==4.19.4',
+    'numpy',
+    'pandas',
+    'torch',
+    'torchvision',
+    'tqdm'
     ]
 
 dependency_links = [
