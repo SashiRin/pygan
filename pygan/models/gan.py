@@ -1,15 +1,6 @@
-import torch
-import torch.nn as nn
-import torch.optim as optim
-import torch.cuda as tcuda
-from torch.autograd import Variable
-
-import pandas as pd
-
+from . import *
 from .generators import BaseGenerator
 from .discriminators import BaseDiscriminator
-
-from tqdm import tqdm
 
 
 class GAN(object):
@@ -102,6 +93,3 @@ class GAN(object):
     def save(self, generator_path, discriminator_path):
         torch.save(self.G.state_dict(), generator_path)
         torch.save(self.D.state_dict(), discriminator_path)
-
-    def draw(self):
-        pass

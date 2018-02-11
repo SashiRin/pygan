@@ -1,8 +1,6 @@
 from __future__ import print_function
 import argparse
 from torch.utils.data import Dataset, DataLoader
-import pandas as pd
-import numpy as np
 import torchvision.datasets as dset
 import torchvision.transforms as transforms
 import torch
@@ -11,97 +9,6 @@ if __name__ == '__main__':
 	from models.models import model
 else:
 	from .models.models import model
-
-print(model)
-
-
-class DataFrameDataset(Dataset):
-    def __init__(self, dataFrame, y_label):
-        self.df = pd.read_csv(dataFrame)
-        self.y_label = y_label
-        self.x_dim = len(self.df.columns.values) - 1
-        self.class_num = len(pd.unique(self.df[self.y_label]))
-        self.categories = { }
-        self.dataCheck()
-        self.dfmax = self.df.max()
-        self.dfmin = self.df.min()
-        self.dfmean = self.df.mean()
-        self.dfstd = self.df.std()
-
-    def __len__(self):
-        return len(self.df)
-
-    def __getitem__(self, index):
-        item = self.df.loc[index]
-        data = item.drop(self.y_label).as_matrix().astype('float32')
-        labels = item[self.y_label].astype('long')
-        return (data, labels)
-
-    def dataCheck(self):
-        threshold = len(self) // 20 # is it good ratio?
-        aY = False
-        for col in self.df.columns:
-            unique = np.sort(self.df[col].unique())
-
-            if self.df[col].dtype == np.int or len(unique) < threshold:
-                if aY:
-                    self.categories[col] = unique
-                    continue
-                from tqdm import tqdm
-                tqdm.write('\n'.join([
-                               'Expecting the column {} is categorical or one hot value'.format(col),
-                               'If you want to generated data be in those categories, type [Y]/n/aY/aN'
-                           ]))
-                ans = input()
-                if ans.lower() == 'y' or ans == '':
-                    self.categories[col] = unique
-                elif ans.lower() == 'ay':
-                    self.categories[col] = unique
-                    aY = True
-                elif ans.lower() == 'an':
-                    break
-
-    def dataStandardize(self):
-        self.df = (self.df - self.dfmean) / self.dfstd
-
-    def dataNorm(self):
-        self.df = (self.df - self.dfmin) / (self.dfmax - self.dfmin) * 2 - 1
-
-    def dataDestandarize(self, df=None):
-        if df is None:
-            self.df = self.df * self.dfstd + self.dfmean
-        else:
-            return df * self.dfstd + self.dfmean
-
-    def dataDenorm(self, df=None):
-        if df is None:
-            self.df = self.df * (self.dfmax - self.dfmin) + self.dfmin
-        else:
-            return (df + 1) / 2 * (self.dfmax - self.dfmin) + self.dfmin
-
-    def dataRound(self, df):
-        from bisect import bisect_left
-        from tqdm import tqdm
-        pbar = tqdm(total = len(self.categories))
-        def round_val(mlist, mnum):
-            pos = bisect_left(mlist, mnum)
-            if pos == 0:
-                return mlist[0]
-            if pos == len(mlist):
-                return mlist[-1]
-            before = mlist[pos - 1]
-            after = mlist[pos]
-            if after - mnum < mnum - before:
-                return after
-            else:
-                return before
-
-        for col in self.categories:
-            rounder = self.categories[col]
-            for i in range(len(df)):
-                df[col][i] = round_val(rounder, df[col][i])
-            pbar.update(1)
-
 
 
 def main(opt):
@@ -164,7 +71,7 @@ def load_data(opt):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--gan_type', default='GAN', help=' GAN | CGAN | WGAN | WCGAN | VIGAN ')
+    parser.add_argument('--gan_type', default='GAN', help=' GAN | CGAN | WGAN | WCGAN ')
     parser.add_argument('--gen_num', type=int, default=64)
     parser.add_argument('--data_root', required=True)
     parser.add_argument('--data_type', help=' FRAME | SET ')
