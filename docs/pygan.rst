@@ -6,8 +6,6 @@ Subpackages
 
 .. toctree::
 
-    pygan.models
-
 Submodules
 ----------
 
@@ -15,7 +13,6 @@ Submodules
 
    pygan.DataFrameDataset
    pygan.augmentator
-   pygan.preprocessor
 
 Module contents
 ---------------

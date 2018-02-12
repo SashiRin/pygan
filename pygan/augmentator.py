@@ -16,6 +16,19 @@ def main(opt):
     """
     데이터를 주어진 옵션에 따라 자동으로 생성합니다.
     옵션은 types.SimpleNamespace 를 통해 정의할 수 있습니다.
+
+        >>> import types
+        >>> opt = types.SimpleNamespace()
+        >>> opt.y_label = 'Grant.Status'
+        >>> opt.z_dim = 100
+        >>> opt.lrD = 0.00005
+        >>> opt.lrG = 0.00005
+        >>> opt.gen_num = 10
+        >>> opt.gan_type = 'CGAN'
+        >>> opt.epoch_num = 10
+        >>> opt.path = './result'
+        >>> opt.batch_size = 128
+
     :param opt:
         * opt.data_root: 사용할 데이터 프레임
         * opt.y_label: 학습의 정답으로 사용할 레이블의 이름
@@ -26,7 +39,8 @@ def main(opt):
         * opt.epoch_num: 학습의 epoch 수
         * opt.path: 학습된 Generator와 Discriminator의 Weight과 생성된 데이터가 저장될 위치
         * opt.batch_size: 학습에 사용될 batch 크기
-    :return: (GAN, gen_data)
+    :return:
+        * (GAN, gen_data)
         * GAN: 학습된 GAN, GAN.G 와 같이 학습된 Generator를 사용할 수 있다.
         * gen_data: 생성된 데이터, 데이터 프레임 타입.
     """

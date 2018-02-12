@@ -22,6 +22,7 @@ class DataFrameDataset(Dataset):
     def __init__(self, dataframe, y_label, **kwargs):
         """
         데이터 셋을 생성합니다.
+
         :param dataframe: 학습에 사용할 Pandas 데이터 프레임
         :param y_label: dataframe에서 레이블
         :param kwargs: checkCategories를 위한 인자 (all_yes, threshold)
@@ -50,6 +51,7 @@ class DataFrameDataset(Dataset):
     def checkCategories(self, all_yes=False, threshold=None):
         """
         범주형 데이터를 자동으로 찾아 분류합니다.
+
         :param all_yes: 범주형 데이터인지에 대한 질문에 모두 예로 답합니다.
         :param threshold: 범주형 데이터가 되기 위한 최대의 서로 다른 값의 수를 의미합니다.
         :return: 분류된 범주형 데이터들의 메타데이터
@@ -85,6 +87,7 @@ class DataFrameDataset(Dataset):
         데이터를 -1과 1사이로 Normalize합니다.
         dataframe이 주어지면 Normalize된 dataframe을 리턴하며, 기존의 dataframe은 바꾸지 않습니다.
         dataframe이 주어지지 않으면 데이터 셋이 가진 dataframe을 normalize합니다.
+
         :param dataframe: normalize하려는 dataframe
         :return: normalized dataframe
         """
@@ -98,7 +101,8 @@ class DataFrameDataset(Dataset):
     def standardizeDataFrame(self, dataframe=None):
         """
         데이터의 평균이 0이 되도록 Standardize합니다.
-         dataframe의 여부에 따른 결과는 normalizeDataFrame과 같습니다.
+        dataframe의 여부에 따른 결과는 normalizeDataFrame과 같습니다.
+
         :param dataframe: standardize하려는 dataframe
         :return: standardized dataframe
         """
@@ -111,7 +115,8 @@ class DataFrameDataset(Dataset):
     def denormalizeDataFrame(self, dataframe=None):
         """
         데이터를 원래 영역으로 Denormalize합니다.
-         dataframe의 여부에 따른 결과는 normalizeDataFrame과 같습니다.
+        dataframe의 여부에 따른 결과는 normalizeDataFrame과 같습니다.
+
         :param dataframe: denormalize하려는 dataframe
         :return: denormalized dataframe
         """
@@ -124,7 +129,8 @@ class DataFrameDataset(Dataset):
     def destandardizeDataFrame(self, dataframe=None):
         """
         데이터를 원래 영역으로 Destandardize합니다.
-         dataframe의 여부에 따른 결과는 normalizeDataFrame과 같습니다.
+        dataframe의 여부에 따른 결과는 normalizeDataFrame과 같습니다.
+
         :param dataframe: destandardize하려는 dataframe
         :return: destandardized dataframe
         """
@@ -137,7 +143,8 @@ class DataFrameDataset(Dataset):
     def dataRound(self, dataframe=None):
         """
         데이터 프레임의 데이터를 범주형 데이터 메타데이터에 따라 선형 반올림처리합니다.
-         dataframe의 여부에 따른 결과는 normalizeDataFrame과 같습니다.
+        dataframe의 여부에 따른 결과는 normalizeDataFrame과 같습니다.
+
         :param dataframe: round하려는 dataframe
         :return: rounded dataframe
         """
