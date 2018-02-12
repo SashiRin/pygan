@@ -94,6 +94,7 @@ class DataFrameDataset(Dataset):
             return dataframe * self.df_std + self.df_mean
 
     def dataRound(self, dataframe=None):
+        print(self.categories)
         if dataframe is None:
             dataframe = self.dataframe
         else:
