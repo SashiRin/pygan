@@ -118,3 +118,4 @@ class DataFrameDataset(Dataset):
             for i in range(len(dataframe)):
                 dataframe[col][i] = round_val(rounder, dataframe[col][i])
             pbar.update(1)
+        return dataframe
