@@ -40,7 +40,9 @@ def main(opt):
         epoch_num=opt.epoch_num,
         class_num=class_num)
     GAN.train(opt.epoch_num)
-    gen_data = pd.DataFrame(GAN.generate(opt.gen_num), columns=opt.data_root.columns)
+    gen_data = GAN.generate(opt.gen_num)
+    print(gen_data)
+    gen_data = pd.DataFrame(gen_data, columns=opt.data_root.columns)
     gen_data = data_loader.dataset.destandardizeDataFrame(gen_data)
     gen_data = data_loader.dataset.dataRound(gen_data)
     GAN.save('{}/generator_weight'.format(opt.path), '{}/discriminator_weight'.format(opt.path))
