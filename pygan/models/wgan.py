@@ -75,10 +75,7 @@ class WGAN(GAN):
         self.G.eval()
         results = self.G(z)
         self.G.train()
-        return pd.DataFrame(
-            results.data.numpy(),
-            columns=self.train_loader.dataset.df.columns
-        )
+        return results.data.numpy(),
 
 
     def save(self, generator_path, discriminator_path):
