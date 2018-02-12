@@ -56,9 +56,9 @@ class DataFrameDataset(Dataset):
                     ]))
                     ans = input()
                     if ans.lower() == 'y' or ans == '':
-                        self.categories[col] = category
+                        categories[col] = category
                     elif ans.lower() == 'ay':
-                        self.categories[col] = category
+                        categories[col] = category
                         all_yes = True
                     elif ans.lower() == 'an':
                         break
