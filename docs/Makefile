@@ -7,6 +7,8 @@ SPHINXBUILD   = python -msphinx
 SPHINXPROJ    = pygan
 SOURCEDIR     = .
 BUILDDIR      = ../../pygan-docs
+PDFBUILDDIR   = /tmp
+PDF           = ../manual.pdf
 
 # Put it first so that "make" without argument is like "make help".
 help:

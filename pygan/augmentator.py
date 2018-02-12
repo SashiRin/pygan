@@ -79,7 +79,6 @@ def main(opt):
         gen_data = pd.DataFrame(gen_data, columns=opt.data_root.columns)
     gen_data = data_loader.dataset.destandardizeDataFrame(gen_data)
     gen_data = data_loader.dataset.dataRound(gen_data)
-    print(gen_data)
     GAN.save('{}/generator_weight'.format(opt.path), '{}/discriminator_weight'.format(opt.path))
     gen_data.to_csv('{}/gen_data.csv'.format(opt.path), index=False)
     return GAN, gen_data
