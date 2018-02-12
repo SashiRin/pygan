@@ -33,7 +33,7 @@ class DataFrameDataset(Dataset):
     def __getitem__(self, item):
         row = self.dataframe.loc[item]
         x = row.drop(self.y_label).as_matrix().astype('float32')
-        y = row[self.y_label].astyle('long')
+        y = row[self.y_label].astype('long')
 
         return x, y
 
