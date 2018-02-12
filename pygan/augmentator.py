@@ -41,7 +41,7 @@ def main(opt):
         class_num=class_num)
     GAN.train(opt.epoch_num)
     gen_data = GAN.generate(opt.gen_num)
-    gen_data = data_loader.dataset.dataDestandarize(gen_data)
+    gen_data = data_loader.dataset.destandardizeDataFrame(gen_data)
     data_loader.dataset.dataRound(gen_data)
     GAN.save('{}/generator_weight'.format(opt.path), '{}/discriminator_weight'.format(opt.path))
     gen_data.to_csv('{}/gen_data.csv'.format(opt.path), index=False)
@@ -49,7 +49,7 @@ def main(opt):
 
 def load_data(opt):
     dataset = DataFrameDataset(opt.data_root, opt.y_label)
-    dataset.dataStandardize()
+    dataset.standardizeDataFrame()
     return DataLoader(dataset, batch_size=opt.batch_size, shuffle=False)
 
 if __name__ == '__main__':

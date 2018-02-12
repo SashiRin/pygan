@@ -106,3 +106,4 @@ ENV/
 .ipynb_checkpoint/
 .idea/
 __pycache__
+.git_autoupload.sh
