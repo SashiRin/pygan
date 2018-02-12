@@ -32,8 +32,13 @@ sys.path.insert(0, os.path.abspath('..'))
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinx.ext.autodoc']
-
+extensions = ['sphinx.ext.autodoc', 'rinoh.frontend.sphinx']
+pdf_documents = [('index', u'rst2pdf', u'Sample rst2pdf doc', u'Your Name'),]
+rinoh_documents = [('index',            # top-level file (index.rst)
+                    'target',           # output (target.pdf)
+                    'Document Title',   # document title
+                    'John A. Uthor')]   # document author
+rinoh_paper_size = 'A4'
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 

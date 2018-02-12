@@ -7,12 +7,22 @@ SPHINXBUILD   = python -msphinx
 SPHINXPROJ    = pygan
 SOURCEDIR     = .
 BUILDDIR      = ../../pygan-docs
-PDFBUILDDIR   = /tmp
+PDFBUILDDIR   = .
 PDF           = ../manual.pdf
 
 # Put it first so that "make" without argument is like "make help".
 help:
 	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+
+latexpdf:
+	$(SPHINXBUILD) -b latex $(ALLSPHINXOPTS) $(PDFBUILDDIR)/latex
+	#                                          ^^^
+	@echo "Running LaTeX files through pdflatex..."
+	make -C $(PDFBUILDDIR)/latex all-pdf
+	#         ^^^
+	cp $(PDFBUILDDIR)/latex/*.pdf $(PDF)
+	#^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	@echo "pdflatex finished; see $(PDF)"
 
 .PHONY: help Makefile
 
