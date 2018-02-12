@@ -13,22 +13,40 @@ else:
 
 
 def main(opt):
-    if opt.image:
-        data_loader = torch.utils.data.DataLoader(
-            datasets.MNIST('../data', train=True, download=True,
-                           transform=transforms.Compose([
-                               transforms.ToTensor(),
-                               transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
-                               transforms.Lambda(lambda x: x.view(-1))
-                           ])),
-            batch_size=opt.batch_size, shuffle=False)
-    else:
-        data_loader = load_data(opt)
-
-    if opt.image:
-        z_dim, x_dim, class_num = 100, 784, 10
-    else:
-        z_dim, x_dim, class_num = opt.z_dim, data_loader.dataset.x_dim, data_loader.dataset.class_num
+    """
+    데이터를 주어진 옵션에 따라 자동으로 생성합니다.
+    옵션은 types.SimpleNamespace 를 통해 정의할 수 있습니다.
+    :param opt:
+        * opt.data_root: 사용할 데이터 프레임
+        * opt.y_label: 학습의 정답으로 사용할 레이블의 이름
+        * opt.z_dim: Generator의 입력으로 사용될 Noise의 차원
+        * opt.lrD, opt.lrG: Discriminator, Generator Learning Rate
+        * opt.gen_num: 생성할 데이터 수
+        * opt.gan_type: 사용할 GAN의 종류 ( GAN | CGAN | WGAN | WCGAN )
+        * opt.epoch_num: 학습의 epoch 수
+        * opt.path: 학습된 Generator와 Discriminator의 Weight과 생성된 데이터가 저장될 위치
+        * opt.batch_size: 학습에 사용될 batch 크기
+    :return: (GAN, gen_data)
+        * GAN: 학습된 GAN, GAN.G 와 같이 학습된 Generator를 사용할 수 있다.
+        * gen_data: 생성된 데이터, 데이터 프레임 타입.
+    """
+    # if opt.image:
+    #     data_loader = torch.utils.data.DataLoader(
+    #         datasets.MNIST('../data', train=True, download=True,
+    #                        transform=transforms.Compose([
+    #                            transforms.ToTensor(),
+    #                            transforms.Normalize(mean=(0.5, 0.5, 0.5), std=(0.5, 0.5, 0.5)),
+    #                            transforms.Lambda(lambda x: x.view(-1))
+    #                        ])),
+    #         batch_size=opt.batch_size, shuffle=False)
+    # else:
+    #     data_loader = load_data(opt)
+    data_loader = load_data(opt)
+    # if opt.image:
+    #     z_dim, x_dim, class_num = 100, 784, 10
+    # else:
+    #     z_dim, x_dim, class_num = opt.z_dim, data_loader.dataset.x_dim, data_loader.dataset.class_num
+    z_dim, x_dim, class_num = opt.z_dim, data_loader.dataset.x_dim, data_loader.dataset.class_num
     GAN = model[opt.gan_type](
         train_loader=data_loader,
         batch_size=opt.batch_size,
@@ -41,10 +59,13 @@ def main(opt):
         class_num=class_num)
     GAN.train(opt.epoch_num)
     gen_data = GAN.generate(opt.gen_num)
-    print(gen_data)
-    gen_data = pd.DataFrame(gen_data, columns=opt.data_root.columns)
+    if opt.gan_type == 'GAN' or opt.gan_type == 'WGAN':
+        gen_data = pd.DataFrame(gen_data, columns=opt.data_root.columns.drop(opt.y_label))
+    elif opt.gan_type == 'CGAN' or opt.gan_type == 'WCGAN':
+        gen_data = pd.DataFrame(gen_data, columns=opt.data_root.columns)
     gen_data = data_loader.dataset.destandardizeDataFrame(gen_data)
     gen_data = data_loader.dataset.dataRound(gen_data)
+    print(gen_data)
     GAN.save('{}/generator_weight'.format(opt.path), '{}/discriminator_weight'.format(opt.path))
     gen_data.to_csv('{}/gen_data.csv'.format(opt.path), index=False)
     return GAN, gen_data

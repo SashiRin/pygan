@@ -38,7 +38,7 @@ class ConditionalDiscriminator(nn.Module):
     def forward(self, x, c):
         x_1 = F.leaky_relu(self.fc1_1(x), 0.2)
         x_2 = F.leaky_relu(self.fc1_2(c), 0.2)
-        x = torch.cat([x_1, x_2], 1)
+        x = torch.cat([x_1, x_2], len(x_1.size()) - 1)
         x = F.leaky_relu(self.fc2(x), 0.2)
         x = F.leaky_relu(self.fc3(x), 0.2)
         y = F.sigmoid(self.fc4(x))
@@ -87,7 +87,7 @@ class ConditionalBNDiscriminator(nn.Module):
     def forward(self, x, c):
         x_1 = F.leaky_relu(self.fc1_1(x), 0.2)
         x_2 = F.leaky_relu(self.fc1_2(c), 0.2)
-        x = torch.cat([x_1, x_2], 1)
+        x = torch.cat([x_1, x_2], len(x_1.size()) - 1)
         x = F.leaky_relu(self.fc2_bn(self.fc2(x)), 0.2)
         x = F.leaky_relu(self.fc3_bn(self.fc3(x)), 0.2)
         y = F.sigmoid(self.fc4(x))

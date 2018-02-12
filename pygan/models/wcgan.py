@@ -8,8 +8,8 @@ class WCGAN(GAN):
     def __init__(self, **kwargs):
         self.batch_size = kwargs['batch_size']
         self.train_loader = kwargs['train_loader']
-        self.G = ConditionalBNGenerator(**kwargs)
-        self.D = ConditionalBNDiscriminator(**kwargs)
+        self.G = ConditionalGenerator(**kwargs)
+        self.D = ConditionalDiscriminator(**kwargs)
         self.z_size = kwargs['z_size']
         self.class_num = kwargs['class_num']
         self.fixed_z = torch.rand(10, self.z_size)
@@ -24,14 +24,12 @@ class WCGAN(GAN):
 
 
     def train(self, epoch_num=10):
-        self.G.weight_init(mean=0, std=0.02)
-        self.D.weight_init(mean=0, std=0.02)
-
         gen_noise_tensor = torch.FloatTensor(self.batch_size, self.z_size)
         gp_alpha_tensor = torch.FloatTensor(self.batch_size, 1, 1, 1)
         if tcuda.is_available():
             gen_noise_tensor = gen_noise_tensor.cuda()
             gp_alpha_tensor = gp_alpha_tensor.cuda()
+        gen_noise_tensor = Variable(gen_noise_tensor, requires_grad=False)
         for epoch in trange(epoch_num, desc='Epoch'):
             pbar2 = tqdm(total=len(self.train_loader))
 
@@ -40,6 +38,8 @@ class WCGAN(GAN):
 
             for x, y in self.train_loader:
                 batch_size = x.size()[0]
+                if batch_size != self.batch_size:
+                    continue
 
                 if tcuda.is_available():
                     x = x.cuda()
@@ -47,7 +47,12 @@ class WCGAN(GAN):
                 enable_gradients(self.G)
                 disable_gradients(self.D)
                 self.G.zero_grad()
-                loss = wgan_generator_loss(gen_noise_tensor, self.G, self.D)
+                y_label = torch.zeros(batch_size, self.class_num)
+                y_label.scatter_(1, y.view(batch_size, 1), 1)
+                if tcuda.is_available():
+                    y_label = y_label.cuda()
+                y_label = Variable(y_label, requires_grad=False)
+                loss = wcgan_generator_loss(gen_noise_tensor, y_label, self.G, self.D)
                 loss.backward()
                 self.G_optimizer.step()
                 generator_losses.append(loss.data[0])
@@ -56,8 +61,14 @@ class WCGAN(GAN):
                 enable_gradients(self.D)
                 disable_gradients(self.G)
                 self.D.zero_grad()
-                loss = wgan_gp_discriminator_loss(gen_noise_tensor, x, self.G,
-                                                  self.D, 10., gp_alpha_tensor)
+                y_fake = (torch.rand(batch_size, 1) * self.class_num).type(torch.LongTensor)
+                y_flabel = torch.zeros(batch_size, self.class_num)
+                y_flabel.scatter_(1, y.view(batch_size, 1), 1)
+                if tcuda.is_available():
+                    y_label = y_label.cuda()
+                y_flabel = Variable(y_flabel)
+                loss = wcgan_gp_discriminator_loss(gen_noise_tensor, y_flabel, x, y_label, self.G,
+                                                   self.D, 10., gp_alpha_tensor)
                 loss.backward()
                 self.D_optimizer.step()
                 discriminator_losses.append(loss.data[0])
@@ -85,10 +96,7 @@ class WCGAN(GAN):
         results = self.G(z, c)
         resultsd = torch.cat([results.data, c_], 1)
         self.G.train()
-        return pd.DataFrame(
-            resultsd.numpy(),
-            columns=self.train_loader.dataset.df.columns
-        )
+        return resultsd.numpy()
 
 
     def save(self, generator_path, discriminator_path):

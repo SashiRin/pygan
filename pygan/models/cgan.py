@@ -102,6 +102,7 @@ class CGAN(GAN):
         self.G.eval()
         results = self.G(z, c)
         resultsd = torch.cat([results.data, c_], 1)
+        self.G.train()
         return resultsd.numpy()
 
 
