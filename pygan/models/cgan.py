@@ -102,10 +102,7 @@ class CGAN(GAN):
         self.G.eval()
         results = self.G(z, c)
         resultsd = torch.cat([results.data, c_], 1)
-        return pd.DataFrame(
-            resultsd.numpy(),
-            columns=self.train_loader.dataset.df.columns
-        )
+        return resultsd.numpy()
 
 
     def save(self, generator_path, discriminator_path):
