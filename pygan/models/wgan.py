@@ -24,9 +24,6 @@ class WGAN(GAN):
 
 
     def train(self, epoch_num=10):
-        self.G.weight_init(mean=0, std=0.02)
-        self.D.weight_init(mean=0, std=0.02)
-
         gen_noise_tensor = torch.FloatTensor(self.batch_size, self.z_size)
         gp_alpha_tensor = torch.FloatTensor(self.batch_size, 1, 1, 1)
         if tcuda.is_available():
