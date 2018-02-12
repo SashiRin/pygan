@@ -42,9 +42,9 @@ class DataFrameDataset(Dataset):
             threshold = len(self.dataframe) // 20
         categories = {}
         for col in self.dataframe.columns:
-            category = np.sort(self.df[col].unique())
+            category = np.sort(self.dataframe[col].unique())
 
-            if self.df[col].dtype == np.int or len(category) < threshold:
+            if self.dataframe[col].dtype == np.int or len(category) < threshold:
                 if all_yes:
                     categories[col] = category
                     continue
