@@ -37,6 +37,8 @@ class WGAN(GAN):
 
             for x, y in self.train_loader:
                 batch_size = x.size()[0]
+                if batch_size != self.batch_size:
+                    continue
 
                 if tcuda.is_available():
                     x = x.cuda()
@@ -75,7 +77,7 @@ class WGAN(GAN):
         self.G.eval()
         results = self.G(z)
         self.G.train()
-        return results.data.numpy(),
+        return results.data.numpy()
 
 
     def save(self, generator_path, discriminator_path):

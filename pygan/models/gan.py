@@ -13,10 +13,7 @@ class GAN(object):
         if tcuda.is_available():
             self.G, self.D = self.G.cuda(), self.D.cuda()
 
-        # todo --> customizable
         self.BCE_loss = nn.BCELoss()
-
-        # todo --> customizable
         self.G_optimizer = optim.Adam(self.G.parameters(), lr=kwargs['lrG'])
         self.D_optimizer = optim.Adam(self.D.parameters(), lr=kwargs['lrD'])
 
@@ -84,10 +81,7 @@ class GAN(object):
         self.G.eval()
         results = self.G(z)
         self.G.train()
-        return pd.DataFrame(
-            results.data.numpy(),
-            columns=self.train_loader.dataset.df.columns.drop([self.train_loader.dataset.y_label])
-        )
+        return results.data.numpy()
 
 
     def save(self, generator_path, discriminator_path):
