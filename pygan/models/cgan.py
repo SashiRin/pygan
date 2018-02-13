@@ -100,7 +100,6 @@ class CGAN(GAN):
         z, c = Variable(z), Variable(c)
         self.G.eval()
         results = self.G(z, c)
-        print(results, c_)
         resultsd = torch.cat([results.data.cpu(), c_], 1)
         self.G.train()
         return resultsd.numpy()

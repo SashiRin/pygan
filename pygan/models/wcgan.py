@@ -94,7 +94,7 @@ class WCGAN(GAN):
         z, c = Variable(z), Variable(c)
         self.G.eval()
         results = self.G(z, c)
-        resultsd = torch.cat([results.data, c_], 1)
+        resultsd = torch.cat([results.data.cpu(), c_], 1)
         self.G.train()
         return resultsd.numpy()
 
