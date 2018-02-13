@@ -28,8 +28,8 @@ class CGAN(GAN):
     def train(self, epoch_num=10):
         self.G.weight_init(mean=0, std=0.02)
         self.D.weight_init(mean=0, std=0.02)
-        for epoch in trange(epoch_num, desc='Epoch'):
-            pbar2 = tqdm(total=len(self.train_loader))
+        for epoch in mtrange(epoch_num, desc='Epoch'):
+            pbar2 = mtqdm(total=len(self.train_loader), leave=False)
 
             generator_losses = []
             discriminator_losses = []
@@ -82,7 +82,7 @@ class CGAN(GAN):
                 pbar2.update(batch_size)
 
             pbar2.close()
-            tqdm.write('Training [{:>5}:{:>5}] D Loss {:.6f}, G Loss {:.6f}'.format(
+            write('Training [{:>5}:{:>5}] D Loss {:.6f}, G Loss {:.6f}'.format(
                 epoch + 1, epoch_num,
                 torch.mean(torch.FloatTensor(discriminator_losses)),
                 torch.mean(torch.FloatTensor(generator_losses))))

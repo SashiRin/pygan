@@ -19,6 +19,7 @@ def main(opt):
 
         >>> import types
         >>> opt = types.SimpleNamespace()
+        >>> opt.data_root = pd.read_csv('../data/train_set.csv')
         >>> opt.y_label = 'Grant.Status'
         >>> opt.z_dim = 100
         >>> opt.lrD = 0.00005
@@ -84,7 +85,8 @@ def main(opt):
     return GAN, gen_data
 
 def load_data(opt):
-    dataset = DataFrameDataset(opt.data_root, opt.y_label)
+    opt.dataframe = opt.data_root
+    dataset = DataFrameDataset(**(opt.__dict__))
     dataset.standardizeDataFrame()
     return DataLoader(dataset, batch_size=opt.batch_size, shuffle=False)
 

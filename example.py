@@ -5,7 +5,6 @@ import pandas as pd
 
 opt = types.SimpleNamespace()
 opt.data_root = pd.read_csv('../testing/data.csv')
-opt.image = False
 opt.y_label = 'Grant.Status'
 opt.z_dim = 100
 opt.lrD = 0.00005
@@ -15,6 +14,6 @@ opt.gan_type = 'CGAN'
 opt.epoch_num = 10
 opt.path = './result'
 opt.batch_size = 128
-
+opt.all_yes = True
 augmentator.main(opt)
 

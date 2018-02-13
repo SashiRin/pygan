@@ -48,7 +48,7 @@ class DataFrameDataset(Dataset):
 
         return x, y
 
-    def checkCategories(self, all_yes=False, threshold=None):
+    def checkCategories(self, all_yes=False, threshold=None, **kwargs):
         """
         범주형 데이터를 자동으로 찾아 분류합니다.
 
