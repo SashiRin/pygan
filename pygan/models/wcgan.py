@@ -62,12 +62,12 @@ class WCGAN(GAN):
                 disable_gradients(self.G)
                 self.D.zero_grad()
                 y_fake = (torch.rand(batch_size, 1) * self.class_num).type(torch.LongTensor)
-                y_flabel = torch.zeros(batch_size, self.class_num)
-                y_flabel.scatter_(1, y.view(batch_size, 1), 1)
+                y_fake_label = torch.zeros(batch_size, self.class_num)
+                y_fake_label.scatter_(1, y.view(batch_size, 1), 1)
                 if tcuda.is_available():
-                    y_label = y_label.cuda()
-                y_flabel = Variable(y_flabel)
-                loss = wcgan_gp_discriminator_loss(gen_noise_tensor, y_flabel, x, y_label, self.G,
+                    y_fake_label = y_fake_label.cuda()
+                y_fake_label = Variable(y_fake_label)
+                loss = wcgan_gp_discriminator_loss(gen_noise_tensor, y_fake_label, x, y_label, self.G,
                                                    self.D, 10., gp_alpha_tensor)
                 loss.backward()
                 self.D_optimizer.step()
