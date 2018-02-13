@@ -87,7 +87,6 @@ class CGAN(GAN):
                 torch.mean(torch.FloatTensor(discriminator_losses)),
                 torch.mean(torch.FloatTensor(generator_losses))))
 
-
     def generate(self, gen_num=10):
         z = torch.rand(gen_num, self.z_size)
         c_ = torch.zeros(gen_num // self.class_num, 1)
@@ -101,10 +100,10 @@ class CGAN(GAN):
         z, c = Variable(z), Variable(c)
         self.G.eval()
         results = self.G(z, c)
-        resultsd = torch.cat([results.cpu().data, c_], 1)
+        print(results, c_)
+        resultsd = torch.cat([results.data.cpu(), c_], 1)
         self.G.train()
         return resultsd.numpy()
-
 
     def save(self, generator_path, discriminator_path):
         super().save(generator_path, discriminator_path)
